@@ -1,0 +1,147 @@
+{
+  "info": {
+    "name": "Food Categories API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for testing Food Categories CRUD operations"
+  },
+  "item": [
+    {
+      "name": "Create Category",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Vegetables\",\n  \"description\": \"Fresh vegetables\",\n  \"isFinal\": false,\n  \"parentId\": null\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/food-categories",
+          "host": ["{{base_url}}"],
+          "path": ["api", "food-categories"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Category by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/food-categories/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "food-categories", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Categories",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/food-categories?page=0&size=10&sort=name,asc",
+          "host": ["{{base_url}}"],
+          "path": ["api", "food-categories"],
+          "query": [
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "10"
+            },
+            {
+              "key": "sort",
+              "value": "name,asc"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Category Tree",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/food-categories/tree",
+          "host": ["{{base_url}}"],
+          "path": ["api", "food-categories", "tree"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Category",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Vegetables\",\n  \"description\": \"Updated description\",\n  \"isFinal\": true,\n  \"parentId\": null\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/food-categories/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "food-categories", "1"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Category",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/food-categories/1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "food-categories", "1"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          ""
+        ],
+        "type": "text/javascript"
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "pm.test(\"Status code is 200\", function () {",
+          "    pm.response.to.have.status(200);",
+          "});"
+        ],
+        "type": "text/javascript"
+      }
+    }
+  ]
+}
