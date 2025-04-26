@@ -129,7 +129,7 @@ class FoodCategoryServiceImplTest {
     FoodCategory childCategory = createTestCategory(2L, "Овощи");
     childCategory.setParentId(rootCategory.getParentId());
 
-    when(foodCategoryRepository.findByParentIsNull()).thenReturn(List.of(rootCategory));
+    when(foodCategoryRepository.findByParentIdIsNull()).thenReturn(List.of(rootCategory));
     when(foodCategoryRepository.findAllByParentId(1L))
         .thenReturn(List.of(childCategory));
 

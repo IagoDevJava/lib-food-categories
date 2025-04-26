@@ -1,0 +1,73 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: lib-food-categories
+
+  datasource:
+    driver-class-name: ${app.lib-food-categories.datasource.driver-class-name}
+    url: ${app.lib-food-categories.datasource.url}
+    username: ${app.lib-food-categories.datasource.username}
+    password: ${app.lib-food-categories.datasource.password}
+    hikari:
+      maximum-pool-size: ${app.lib-food-categories.datasource.hikari.maximumPoolSize}
+      minimum-idle: ${app.lib-food-categories.datasource.hikari.minimumIdle}
+      connection-test-query: ${app.lib-food-categories.datasource.validationQuery}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  cache:
+    type: caffeine
+    cache-names: foodCategories,foodCategoriesTree
+    caffeine:
+      spec: maximumSize=500,expireAfterWrite=30m,recordStats
+
+  mvc:
+    locale-resolver: fixed
+
+  jackson:
+    serialization:
+      indent_output: true
+      fail_on_empty_beans: false
+
+app:
+  lib-food-categories:
+    max-pages-of-partial-content: 20
+    datasource:
+      driver-class-name: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:5432/pantree-product
+      username: pantree
+      password: pantree
+      validationQuery: SELECT 1
+      hikari:
+        maximumPoolSize: 25
+        minimumIdle: 5
+
+springdoc:
+  api-docs:
+    path: /lib-food-categories/api-docs
+  swagger-ui:
+    path: /lib-food-categories/swagger-ui.html
+    enabled: true
+
+logging:
+  level:
+    root: INFO
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        web: DEBUG
+        cache: DEBUG

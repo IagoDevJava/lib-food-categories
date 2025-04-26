@@ -82,7 +82,7 @@ public class FoodCategoryServiceImpl implements FoodCategoryService {
   @Override
   @Transactional(readOnly = true)
   public List<FoodCategoryTreeDto> getCategoryTree() {
-    List<FoodCategory> rootCategories = foodCategoryRepository.findByParentIsNull();
+    List<FoodCategory> rootCategories = foodCategoryRepository.findByParentIdIsNull();
     return rootCategories.stream()
         .map(this::convertToTreeDto)
         .collect(Collectors.toList());

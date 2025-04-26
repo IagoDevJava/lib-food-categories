@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FoodCategoryRepository extends JpaRepository<FoodCategory, Long> {
 
-  List<FoodCategory> findByParentIsNull();
+  List<FoodCategory> findByParentIdIsNull();
 
   List<FoodCategory> findAllByParentId(Long parentId);
 }

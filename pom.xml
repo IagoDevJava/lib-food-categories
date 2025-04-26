@@ -78,6 +78,12 @@
 			<artifactId>mapstruct</artifactId>
 			<version>1.5.5.Final</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.ben-manes.caffeine/jcache -->
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>jcache</artifactId>
+			<version>3.1.8</version>
+		</dependency>
 	</dependencies>
 
 	<build>
