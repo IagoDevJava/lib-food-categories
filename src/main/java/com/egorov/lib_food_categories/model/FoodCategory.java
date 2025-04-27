@@ -46,7 +46,7 @@ public class FoodCategory {
    * Родительская категория. Может быть null для корневых категорий.
    * Используется для построения иерархии категорий.
    */
-  @ManyToOne(fetch = FetchType.LAZY)
+//  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "parent_id")
   private Long parentId;
 
@@ -85,18 +85,4 @@ public class FoodCategory {
   @UpdateTimestamp
   @Column(name = "updated_at")
   private ZonedDateTime updatedAt;
-
-//  /**
-//   * Устанавливает родительскую категорию с дополнительной проверкой.
-//   * Если родительская категория помечена как конечная (isFinal=true),
-//   * сбрасывает этот флаг, так как конечная категория не может иметь подкатегорий.
-//   *
-//   * @param parentId родительская категория для установки
-//   */
-//  public void setParentId(Long parentId) {
-//    this.parentId = parentId;
-//    if (parentId != null && !parentId.getIsFinal()) {
-//      parentId.setIsFinal(false);
-//    }
-//  }
 }

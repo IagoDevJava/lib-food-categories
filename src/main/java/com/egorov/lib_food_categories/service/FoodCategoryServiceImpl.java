@@ -40,7 +40,7 @@ public class FoodCategoryServiceImpl implements FoodCategoryService {
   public FoodCategory create(FoodCategory foodCategory) {
     if (foodCategory.getParentId() != null) {
       FoodCategory parent = findById(foodCategory.getParentId());
-      foodCategory.setParentId(parent.getParentId());
+      foodCategory.setParentId(parent.getId());
     }
     return foodCategoryRepository.save(foodCategory);
   }
@@ -82,7 +82,7 @@ public class FoodCategoryServiceImpl implements FoodCategoryService {
   @Override
   @Transactional(readOnly = true)
   public List<FoodCategoryTreeDto> getCategoryTree() {
-    List<FoodCategory> rootCategories = foodCategoryRepository.findByParentIsNull();
+    List<FoodCategory> rootCategories = foodCategoryRepository.findByParentIdIsNull();
     return rootCategories.stream()
         .map(this::convertToTreeDto)
         .collect(Collectors.toList());
@@ -108,7 +108,7 @@ public class FoodCategoryServiceImpl implements FoodCategoryService {
 
     if (request.parentId() != null) {
       FoodCategory parent = findById(request.parentId());
-      existingCategory.setParentId(parent.getParentId());
+      existingCategory.setParentId(parent.getId());
     } else {
       existingCategory.setParentId(null);
     }

@@ -1,15 +1,13 @@
 package com.egorov.lib_food_categories.util;
 
-import com.egorov.lib_food_categories.dto.response.FoodCategoryDto;
 import com.egorov.lib_food_categories.dto.request.FoodCategoryRequest;
+import com.egorov.lib_food_categories.dto.response.FoodCategoryDto;
 import com.egorov.lib_food_categories.model.FoodCategory;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 
 /**
- * Маппер для преобразования между сущностью FoodCategory и DTO.
- * Использует MapStruct для автоматической генерации реализации.
+ * Маппер для преобразования между сущностью FoodCategory и DTO. Использует MapStruct для
+ * автоматической генерации реализации.
  *
  * @author i.egorov
  */
