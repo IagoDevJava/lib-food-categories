@@ -4,10 +4,9 @@ import com.egorov.lib_food_categories.dto.request.FoodCategoryRequest;
 import com.egorov.lib_food_categories.dto.response.FoodCategoryDto;
 import com.egorov.lib_food_categories.dto.response.FoodCategoryTreeDto;
 import com.egorov.lib_food_categories.model.FoodCategory;
-import com.egorov.lib_food_categories.service.FoodCategoryServiceImpl;
+import com.egorov.lib_food_categories.service.FoodCategoryService;
 import com.egorov.lib_food_categories.util.FoodCategoryMapper;
 import jakarta.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -27,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * Контроллер для работы с категориями продуктов. Предоставляет REST API для CRUD операций с
@@ -40,7 +38,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class FoodCategoryController {
 
-  private final FoodCategoryServiceImpl foodCategoryServiceImpl;
+  private final FoodCategoryService foodCategoryService;
   private final FoodCategoryMapper mapper;
 
   /**
@@ -54,13 +52,9 @@ public class FoodCategoryController {
   public ResponseEntity<FoodCategoryDto> create(
       @RequestBody @Valid FoodCategoryRequest request) {
 
-    FoodCategory created = foodCategoryServiceImpl.create(mapper.toEntity(request));
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(created.getId())
-        .toUri();
+    FoodCategory created = foodCategoryService.create(mapper.toEntity(request));
 
-    return ResponseEntity.created(location).body(mapper.toDto(created));
+    return ResponseEntity.ok(mapper.toDto(created));
   }
 
   /**
@@ -73,7 +67,7 @@ public class FoodCategoryController {
   @Cacheable(value = "foodCategories", key = "#id")
   public ResponseEntity<FoodCategoryDto> getById(@PathVariable Long id) {
     return ResponseEntity.ok(
-        mapper.toDto(foodCategoryServiceImpl.findById(id)));
+        mapper.toDto(foodCategoryService.findById(id)));
   }
 
   /**
@@ -91,7 +85,7 @@ public class FoodCategoryController {
       @RequestParam(defaultValue = "name,asc") String[] sort) {
 
     Sort sorting = getSorting(sort);
-    Page<FoodCategory> categories = foodCategoryServiceImpl.findAll(
+    Page<FoodCategory> categories = foodCategoryService.findAll(
         PageRequest.of(page, size, sorting));
 
     return ResponseEntity.ok(categories.map(mapper::toDto));
@@ -106,7 +100,7 @@ public class FoodCategoryController {
   @Cacheable("foodCategoriesTree")
   public ResponseEntity<List<FoodCategoryTreeDto>> getCategoryTree() {
 
-    return ResponseEntity.ok(foodCategoryServiceImpl.getCategoryTree());
+    return ResponseEntity.ok(foodCategoryService.getCategoryTree());
   }
 
   /**
@@ -123,7 +117,7 @@ public class FoodCategoryController {
       @RequestBody @Valid FoodCategoryRequest request) {
 
     return ResponseEntity.ok(
-        mapper.toDto(foodCategoryServiceImpl.update(id, request)));
+        mapper.toDto(foodCategoryService.update(id, request)));
   }
 
   /**
@@ -135,7 +129,7 @@ public class FoodCategoryController {
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @CacheEvict(value = {"foodCategories", "foodCategoriesTree"}, allEntries = true)
   public void delete(@PathVariable Long id) {
-    foodCategoryServiceImpl.delete(id);
+    foodCategoryService.delete(id);
   }
 
   /**

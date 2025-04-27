@@ -61,7 +61,7 @@ class FoodCategoryServiceImplTest {
 
     FoodCategory newCategory = new FoodCategory();
     newCategory.setName("Овощи");
-    newCategory.setParentId(parentCategory.getParentId());
+    newCategory.setParentId(parentCategory.getId());
 
     when(foodCategoryRepository.findById(1L)).thenReturn(Optional.of(parentCategory));
     when(foodCategoryRepository.save(any(FoodCategory.class))).thenReturn(newCategory);
@@ -72,7 +72,7 @@ class FoodCategoryServiceImplTest {
     // Assert
     assertNotNull(result);
     assertEquals("Овощи", result.getName());
-    assertEquals(parentCategory, result.getParentId());
+    assertEquals(parentCategory.getId(), result.getParentId());
     verify(foodCategoryRepository).save(newCategory);
   }
 
@@ -98,9 +98,7 @@ class FoodCategoryServiceImplTest {
     when(foodCategoryRepository.findById(1L)).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(FoodCategoryNotFoundException.class, () -> {
-      foodCategoryServiceImpl.findById(1L);
-    });
+    assertThrows(FoodCategoryNotFoundException.class, () -> foodCategoryServiceImpl.findById(1L));
   }
 
   @Test
@@ -108,8 +106,8 @@ class FoodCategoryServiceImplTest {
     // Arrange
     Pageable pageable = PageRequest.of(0, 10);
     List<FoodCategory> categories = List.of(
-        createTestCategory(1L, "Овощи"),
-        createTestCategory(2L, "Фрукты")
+        createTestCategory(1L, "Овощи", false),
+        createTestCategory(2L, "Фрукты", true)
     );
     Page<FoodCategory> page = new PageImpl<>(categories, pageable, categories.size());
     when(foodCategoryRepository.findAll(pageable)).thenReturn(page);
@@ -125,8 +123,8 @@ class FoodCategoryServiceImplTest {
   @Test
   void getCategoryTree_ShouldReturnTreeStructure() {
     // Arrange
-    FoodCategory rootCategory = createTestCategory(1L, "Продукты");
-    FoodCategory childCategory = createTestCategory(2L, "Овощи");
+    FoodCategory rootCategory = createTestCategory(1L, "Продукты", false);
+    FoodCategory childCategory = createTestCategory(2L, "Овощи", true);
     childCategory.setParentId(rootCategory.getParentId());
 
     when(foodCategoryRepository.findByParentIdIsNull()).thenReturn(List.of(rootCategory));
@@ -146,8 +144,8 @@ class FoodCategoryServiceImplTest {
   @Test
   void update_ShouldUpdateCategoryData() {
     // Arrange
-    FoodCategory existingCategory = createTestCategory(1L, "Старое название");
-    FoodCategory parentCategory = createTestCategory(2L, "Родительская");
+    FoodCategory existingCategory = createTestCategory(1L, "Старое название", true);
+    FoodCategory parentCategory = createTestCategory(2L, "Родительская", true);
 
     when(foodCategoryRepository.findById(1L)).thenReturn(Optional.of(existingCategory));
     when(foodCategoryRepository.findById(2L)).thenReturn(Optional.of(parentCategory));
@@ -161,14 +159,14 @@ class FoodCategoryServiceImplTest {
     assertEquals("Новое название", result.getName());
     assertEquals("Описание", result.getDescription());
     assertTrue(result.getIsFinal());
-    assertEquals(parentCategory, result.getParentId());
+    assertEquals(parentCategory.getId(), result.getParentId());
     verify(foodCategoryRepository).save(existingCategory);
   }
 
   @Test
   void delete_ShouldDeleteExistingCategory() {
     // Arrange
-    FoodCategory category = createTestCategory(1L, "Удаляемая");
+    FoodCategory category = createTestCategory(1L, "Удаляемая", true);
     when(foodCategoryRepository.findById(1L)).thenReturn(Optional.of(category));
     doNothing().when(foodCategoryRepository).delete(category);
 
@@ -179,10 +177,11 @@ class FoodCategoryServiceImplTest {
     verify(foodCategoryRepository).delete(category);
   }
 
-  private FoodCategory createTestCategory(Long id, String name) {
+  private FoodCategory createTestCategory(Long id, String name, Boolean isFinal) {
     FoodCategory category = new FoodCategory();
     category.setId(id);
     category.setName(name);
+    category.setIsFinal(isFinal);
     category.setCreatedAt(ZonedDateTime.now());
     return category;
   }

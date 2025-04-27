@@ -12,7 +12,6 @@ import com.egorov.lib_food_categories.dto.response.FoodCategoryTreeDto;
 import com.egorov.lib_food_categories.model.FoodCategory;
 import com.egorov.lib_food_categories.service.FoodCategoryService;
 import com.egorov.lib_food_categories.util.FoodCategoryMapper;
-import java.net.URI;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,9 +53,7 @@ class FoodCategoryControllerTest {
     ResponseEntity<FoodCategoryDto> response = foodCategoryController.create(request);
 
     // Assert
-    assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    assertEquals(URI.create("http://localhost/api/food-categories/1"),
-        response.getHeaders().getLocation());
+    assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(dto, response.getBody());
 
     verify(mapper).toEntity(request);
@@ -119,13 +116,8 @@ class FoodCategoryControllerTest {
   @Test
   void getCategoryTree_ShouldReturnCategoryTree() {
     // Arrange
-    int page = 0;
-    int size = 10;
-    String[] sort = {"name,asc"};
-
     FoodCategoryTreeDto treeDto = new FoodCategoryTreeDto(1L, "Fruits", null, false, List.of(),
         null);
-    Page<FoodCategoryTreeDto> treePage = new PageImpl<>(List.of(treeDto));
 
     when(foodCategoryService.getCategoryTree()).thenReturn(List.of(treeDto));
 
